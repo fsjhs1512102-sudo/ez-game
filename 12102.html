@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBER-AIM 3D: VEKC OVERDRIVE | 官方一頁式平台</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ice: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            900: '#0c4a6e'
+                        },
+                        cyber: {
+                            pink: '#e11d48',
+                            yellow: '#d97706',
+                            purple: '#9333ea',
+                            dark: '#0f172a'
+                        }
+                    },
+                    fontFamily: {
+                        orbitron: ['Orbitron', 'sans-serif'],
+                        noto: ['Noto Sans TC', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+            overflow-x: hidden;
+        }
+
+        .cyber-font {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        /* 柔和發光與卡片陰影 */
+        .glow-blue {
+            text-shadow: 0 0 12px rgba(2, 132, 199, 0.4);
+        }
+        .card-glass {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(186, 230, 253, 0.6);
+        }
+        .card-glass-dark {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(2, 132, 199, 0.4);
+        }
+
+        /* 狙擊鏡 Overlay */
+        #scope-overlay {
+            background: radial-gradient(circle at center, transparent 30%, rgba(15, 23, 42, 0.9) 35%, black 100%);
+            display: none;
+        }
+
+        /* 明亮淺藍網格背景 */
+        .ice-grid-bg {
+            background-size: 36px 36px;
+            background-image: 
+                linear-gradient(to right, rgba(2, 132, 199, 0.08) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(2, 132, 199, 0.08) 1px, transparent 1px);
+        }
+
+        /* 客製化滾動條 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #0284c7;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="ice-grid-bg antialiased selection:bg-ice-500 selection:text-white">
+
+    <!-- 頂部亮彩導覽列 Navbar -->
+    <nav class="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-ice-200/80 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <a href="#hero" class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-ice-500 to-blue-700 rounded-lg flex items-center justify-center text-white font-black text-xl cyber-font shadow-md">
+                    V
+                </div>
+                <div>
+                    <span class="cyber-font text-xl font-black tracking-wider text-ice-600">CYBER-AIM 3D</span>
+                    <span class="block text-[10px] cyber-font tracking-widest text-slate-500 font-bold">VEKC OVERDRIVE v4.0</span>
+                </div>
+            </a>
+
+            <!-- 桌面選單 -->
+            <div class="hidden md:flex items-center gap-6 font-bold text-sm tracking-wide text-slate-700">
+                <a href="#hero" class="hover:text-ice-600 transition-colors"><i class="fa-solid fa-house mr-1 text-ice-500"></i> 首頁</a>
+                <a href="#game-section" class="hover:text-ice-600 transition-colors text-ice-600"><i class="fa-solid fa-gamepad mr-1"></i> 3D 即時戰場</a>
+                <a href="#music-section" class="hover:text-cyber-pink transition-colors"><i class="fa-solid fa-music mr-1 text-cyber-pink"></i> SUNO 主題曲</a>
+                <a href="#deck-section" class="hover:text-ice-600 transition-colors"><i class="fa-solid fa-file-powerpoint mr-1 text-ice-500"></i> 簡報精華</a>
+                <a href="#timeline-section" class="hover:text-ice-600 transition-colors"><i class="fa-solid fa-code-branch mr-1 text-ice-500"></i> 開發歷程</a>
+                <button onclick="openDevModal()" class="px-4 py-2 border border-cyber-pink text-cyber-pink hover:bg-cyber-pink hover:text-white transition-all rounded font-mono text-xs flex items-center gap-2 shadow-sm font-bold">
+                    <i class="fa-solid fa-key"></i> 🔑 代碼 67 驗證
+                </button>
+            </div>
+
+            <!-- 行動端按鈕 -->
+            <button onclick="toggleMobileMenu()" class="md:hidden text-ice-600 text-2xl">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- 手機選單 -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-ice-200 px-6 py-4 flex-col gap-3 font-bold text-sm">
+            <a href="#hero" onclick="toggleMobileMenu()" class="py-2 text-slate-800">首頁</a>
+            <a href="#game-section" onclick="toggleMobileMenu()" class="py-2 text-ice-600">3D 即時戰場</a>
+            <a href="#music-section" onclick="toggleMobileMenu()" class="py-2 text-cyber-pink">SUNO 主題曲</a>
+            <a href="#deck-section" onclick="toggleMobileMenu()" class="py-2 text-slate-800">專案簡報</a>
+            <a href="#timeline-section" onclick="toggleMobileMenu()" class="py-2 text-slate-800">開發歷程演進</a>
+            <button onclick="toggleMobileMenu(); openDevModal();" class="w-full mt-2 py-2 border border-cyber-pink text-cyber-pink rounded font-mono text-center">
+                🔑 輸入代碼 67 開發者選單
+            </button>
+        </div>
+    </nav>
+
+    <!-- 1. HERO 清爽賽博主視覺區 -->
+    <section id="hero" class="relative min-h-screen flex items-center justify-center pt-24 pb-12 px-4 overflow-hidden bg-gradient-to-b from-ice-50 via-ice-100/50 to-white">
+        <!-- 柔和冰藍動態光斑 -->
+        <div class="absolute inset-0 z-0 opacity-40 pointer-events-none">
+            <div class="absolute top-10 left-1/4 w-96 h-96 bg-ice-200 rounded-full filter blur-[100px]"></div>
+            <div class="absolute bottom-10 right-1/4 w-96 h-96 bg-blue-200 rounded-full filter blur-[100px]"></div>
+        </div>
+
+        <div class="relative z-10 max-w-5xl mx-auto text-center">
+            <!-- 賽博標籤 -->
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-ice-100 border border-ice-300 text-ice-600 font-mono text-xs font-bold mb-6 shadow-sm">
+                <span class="w-2.5 h-2.5 rounded-full bg-ice-500 animate-ping"></span>
+                <span>CYBERPUNK FPS ENGINE v4.0 FINAL</span>
+            </div>
+
+            <!-- 主標題 -->
+            <h1 class="text-4xl sm:text-6xl md:text-7xl font-black cyber-font tracking-tight mb-4 text-slate-900 leading-tight">
+                CYBER-AIM 3D<br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-ice-500 via-blue-600 to-indigo-600 glow-blue">VEKC OVERDRIVE</span>
+            </h1>
+
+            <p class="text-lg sm:text-2xl text-slate-700 font-bold max-w-3xl mx-auto mb-8 tracking-wide">
+                極限戰場 3D：賽博獵殺者 | 繁體中文 Web3D 槍法與身法電競訓練場
+            </p>
+
+            <p class="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto mb-10 leading-relaxed font-medium">
+                結合 Three.js 高幀率 3D 渲染、飛鉤抓繩與時空減速身法、動態 AI 走位標靶、SUNO AI 原聲主題曲與代碼 67 指令，打造零下載免安裝的極速槍感訓練體驗！
+            </p>
+
+            <!-- 快捷導覽按鈕 -->
+            <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+                <a href="#game-section" class="px-8 py-4 bg-ice-500 hover:bg-ice-600 text-white font-black text-lg rounded-xl shadow-lg shadow-ice-500/30 transition-all transform hover:-translate-y-0.5 flex items-center gap-3">
+                    <i class="fa-solid fa-crosshairs text-xl"></i> 啟動 3D 實機戰場
+                </a>
+                <a href="#music-section" class="px-8 py-4 bg-white border-2 border-cyber-pink text-cyber-pink font-bold text-lg rounded-xl hover:bg-cyber-pink hover:text-white transition-all shadow-md flex items-center gap-3">
+                    <i class="fa-solid fa-music"></i> SUNO 主題曲專區
+                </a>
+                <a href="#deck-section" class="px-6 py-4 bg-slate-900 text-white hover:bg-slate-800 font-bold rounded-xl transition-all shadow-md flex items-center gap-2">
+                    <i class="fa-solid fa-file-powerpoint text-ice-300"></i> 專案簡報與架構
+                </a>
+            </div>
+
+            <!-- 數據指標卡片 -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-4xl mx-auto mt-16 text-left">
+                <div class="p-5 card-glass rounded-2xl shadow-sm">
+                    <div class="text-xs text-ice-600 font-mono font-bold mb-1">FPS PERFORMANCE</div>
+                    <div class="text-2xl font-black text-slate-900 cyber-font">60 FPS</div>
+                    <div class="text-xs text-slate-500 mt-1">WebGL 零延遲極速響應</div>
+                </div>
+                <div class="p-5 card-glass rounded-2xl shadow-sm">
+                    <div class="text-xs text-cyber-pink font-mono font-bold mb-1">SOUNDTRACK</div>
+                    <div class="text-2xl font-black text-slate-900 cyber-font">SUNO AI</div>
+                    <div class="text-xs text-slate-500 mt-1">重低音 Electro 主題曲</div>
+                </div>
+                <div class="p-5 card-glass rounded-2xl shadow-sm">
+                    <div class="text-xs text-cyber-yellow font-mono font-bold mb-1">AI TARGETS</div>
+                    <div class="text-2xl font-black text-slate-900 cyber-font">AD 走位 AI</div>
+                    <div class="text-xs text-slate-500 mt-1">三區 Hitbox 傷害計算</div>
+                </div>
+                <div class="p-5 card-glass rounded-2xl shadow-sm">
+                    <div class="text-xs text-purple-600 font-mono font-bold mb-1">DEV SYSTEM</div>
+                    <div class="text-2xl font-black text-slate-900 cyber-font">代碼 67</div>
+                    <div class="text-xs text-slate-500 mt-1">Aimbot / ESP 神級面板</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. 實機 3D 遊戲平台專區 -->
+    <section id="game-section" class="py-16 px-4 max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row items-start md:items-end justify-between mb-8">
+            <div>
+                <div class="text-ice-600 font-mono text-sm tracking-widest font-bold mb-1">LIVE 3D GAME ENGINE</div>
+                <h2 class="text-3xl sm:text-4xl font-black cyber-font text-slate-900 flex items-center gap-3">
+                    <i class="fa-solid fa-gamepad text-ice-500"></i> 3D 賽博槍法競技平台
+                </h2>
+            </div>
+            <div class="mt-4 md:mt-0 flex items-center gap-3">
+                <button onclick="openDevModal()" class="px-4 py-2 bg-cyber-pink/10 border border-cyber-pink text-cyber-pink hover:bg-cyber-pink hover:text-white transition-all text-xs font-mono font-bold rounded-lg shadow-sm">
+                    🔑 輸入代碼 [67] 解鎖控制台
+                </button>
+            </div>
+        </div>
+
+        <!-- 3D 遊戲畫布與 UI 容器 (深色背景提供高質感射擊視野) -->
+        <div class="relative w-full h-[650px] bg-slate-950 border-2 border-ice-300 rounded-2xl overflow-hidden shadow-2xl">
+            
+            <!-- Three.js Canvas -->
+            <canvas id="game-canvas" class="w-full h-full block cursor-crosshair"></canvas>
+
+            <!-- 狙擊鏡 Overlay -->
+            <div id="scope-overlay" class="absolute inset-0 pointer-events-none flex items-center justify-center">
+                <div class="w-full h-[2px] bg-red-500/80 absolute"></div>
+                <div class="h-full w-[2px] bg-red-500/80 absolute"></div>
+                <div class="w-64 h-64 border-2 border-red-500/60 rounded-full absolute"></div>
+            </div>
+
+            <!-- 遊戲 Start 遮罩 -->
+            <div id="start-overlay" class="absolute inset-0 bg-slate-950/85 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center z-30">
+                <div class="w-20 h-20 bg-ice-500/20 border-2 border-ice-400 rounded-full flex items-center justify-center text-ice-400 text-4xl mb-6 shadow-lg shadow-ice-500/30 animate-pulse">
+                    <i class="fa-solid fa-play ml-1"></i>
+                </div>
+                <h3 class="text-3xl font-black cyber-font text-white mb-2">進入 3D 電競訓練場</h3>
+                <p class="text-slate-300 max-w-md text-sm mb-6">點擊下方按鈕鎖定滑鼠視角。支援 WASD 移動身法、Space 跳躍、Shift 滑行、Q 飛鉤抓繩、E 時空減速、Z 電漿爆裂及右鍵 2.5x 狙擊鏡。</p>
+                <button id="btn-start-game" class="px-8 py-4 bg-ice-500 text-white font-black text-lg rounded-xl hover:bg-ice-600 transition-all shadow-lg shadow-ice-500/40">
+                    點擊進入戰場 (CLICK TO LOCK)
+                </button>
+            </div>
+
+            <!-- HUD Overlay Header (遊戲中顯示) -->
+            <div class="absolute top-4 left-4 right-4 pointer-events-none flex items-start justify-between z-10 text-white font-mono">
+                <!-- 左上：生命與技能 -->
+                <div class="space-y-2">
+                    <div class="bg-slate-900/80 border border-ice-400/40 p-3 rounded-xl backdrop-blur-md w-56">
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-ice-400 font-bold"><i class="fa-solid fa-heart mr-1"></i> 生命值 (HP)</span>
+                            <span id="hud-hp-val" class="font-bold text-white">100 / 100</span>
+                        </div>
+                        <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+                            <div id="hud-hp-bar" class="h-full bg-ice-400 w-full transition-all duration-200"></div>
+                        </div>
+                    </div>
+
+                    <!-- 技能 CD 卡片 -->
+                    <div class="flex gap-2">
+                        <div class="bg-slate-900/80 border border-slate-700 px-3 py-1.5 rounded-lg backdrop-blur-md text-xs">
+                            <span class="text-ice-400 font-bold">Q 飛鉤:</span> <span id="cd-q" class="text-green-400">就緒</span>
+                        </div>
+                        <div class="bg-slate-900/80 border border-slate-700 px-3 py-1.5 rounded-lg backdrop-blur-md text-xs">
+                            <span class="text-cyber-pink font-bold">E 減速:</span> <span id="cd-e" class="text-green-400">就緒</span>
+                        </div>
+                        <div class="bg-slate-900/80 border border-slate-700 px-3 py-1.5 rounded-lg backdrop-blur-md text-xs">
+                            <span class="text-cyber-yellow font-bold">Z 電漿:</span> <span id="cd-z" class="text-green-400">就緒</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 中間：擊殺數與爆頭率 -->
+                <div class="bg-slate-900/80 border border-cyber-pink/40 px-6 py-2 rounded-xl backdrop-blur-md text-center">
+                    <div class="text-[10px] text-cyber-pink tracking-widest font-bold">TOTAL KILLS</div>
+                    <div id="hud-score" class="text-3xl font-black cyber-font text-white">0</div>
+                    <div class="text-[10px] text-slate-300 mt-0.5">爆頭率: <span id="hud-hs-percent" class="text-ice-400 font-bold">0%</span></div>
+                </div>
+
+                <!-- 右上：雷達與武器 -->
+                <div class="flex flex-col items-end gap-2">
+                    <!-- 雷達 Minimap -->
+                    <div class="w-28 h-28 bg-slate-900/90 border-2 border-ice-400/60 rounded-full relative overflow-hidden backdrop-blur-md">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-30">
+                            <div class="w-full h-[1px] bg-ice-400"></div>
+                            <div class="h-full w-[1px] bg-ice-400 absolute"></div>
+                        </div>
+                        <div id="radar-player" class="w-2 h-2 bg-ice-400 rounded-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 shadow-[0_0_5px_#0284c7]"></div>
+                        <div id="radar-dots" class="absolute inset-0"></div>
+                    </div>
+
+                    <!-- 彈藥數 -->
+                    <div class="bg-slate-900/80 border border-cyber-yellow/40 px-4 py-2 rounded-xl backdrop-blur-md text-right">
+                        <div id="hud-weapon-name" class="text-xs text-cyber-yellow font-bold">AK-CYBER</div>
+                        <div class="text-xl font-black text-white cyber-font"><span id="hud-ammo-cur">30</span> / <span id="hud-ammo-max" class="text-slate-400 text-sm">30</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 中央準心與 Hitmarker -->
+            <div class="absolute inset-0 pointer-events-none flex items-center justify-center z-10">
+                <div id="crosshair" class="w-4 h-4 relative flex items-center justify-center">
+                    <div class="w-1.5 h-1.5 bg-ice-400 rounded-full"></div>
+                    <div class="absolute w-4 h-[1px] bg-ice-400/80"></div>
+                    <div class="absolute h-4 w-[1px] bg-ice-400/80"></div>
+                </div>
+                <div id="hitmarker" class="absolute w-6 h-6 border-2 border-red-500 rotate-45 opacity-0 transition-opacity duration-100"></div>
+            </div>
+
+            <!-- 擊殺廣播 Kill Feed (右上) -->
+            <div id="kill-feed" class="absolute top-36 right-4 z-20 flex flex-col gap-1 items-end pointer-events-none"></div>
+
+            <!-- 底部操作提示條 -->
+            <div class="absolute bottom-3 left-4 right-4 bg-slate-900/80 border border-slate-800 rounded-xl px-4 py-2 flex flex-wrap items-center justify-between text-xs text-slate-300 font-mono z-10">
+                <div>[WASD] 移動 | [Space] 跳躍 | [Shift] 滑行</div>
+                <div>[1-4] 切換槍械 | [右鍵] 狙擊鏡 | [Q/E/Z] 技能</div>
+                <div class="text-ice-400 font-bold">[~] 解鎖控制台 (代碼 67)</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. SUNO AI 官方主題曲專區 -->
+    <section id="music-section" class="py-16 px-4 bg-ice-100/50 border-y border-ice-200">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-12">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyber-pink/10 border border-cyber-pink/30 text-cyber-pink font-mono text-xs font-bold mb-3">
+                    <i class="fa-solid fa-compact-disc animate-spin"></i> SUNO AI OFFICIAL SOUNDTRACK
+                </div>
+                <h2 class="text-3xl sm:text-5xl font-black cyber-font text-slate-900 mb-3">
+                    SUNO AI 原創主題曲 <span class="text-cyber-pink">《VEKC OVERDRIVE》</span>
+                </h2>
+                <p class="text-slate-600 max-w-2xl mx-auto text-sm sm:text-base font-medium">
+                    由 SUNO AI 生成重低音與 Cyberpunk Electro Industrial 節奏，為《CYBER-AIM 3D》注入極速電競靈魂！
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <!-- SUNO 官方 Iframe 嵌入 -->
+                <div class="lg:col-span-6 card-glass p-4 rounded-2xl shadow-sm">
+                    <div class="text-xs text-cyber-pink font-mono font-bold mb-3 flex items-center justify-between">
+                        <span><i class="fa-solid fa-globe mr-1"></i> SUNO.COM OFFICIAL EMBED PLAYER</span>
+                        <a href="https://suno.com/s/PQ1OgONTwSZhIyor" target="_blank" class="text-ice-600 hover:underline">在 SUNO 官網開啟 <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                    </div>
+                    <div class="w-full h-[300px] rounded-xl overflow-hidden bg-slate-950">
+                        <iframe src="https://suno.com/embed/3422e586-5c21-41d8-9a8d-c13f23472797" class="w-full h-full border-0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+                    </div>
+                </div>
+
+                <!-- 自訂控制器與曲風卡片 -->
+                <div class="lg:col-span-6 space-y-6">
+                    <div class="card-glass p-6 rounded-2xl space-y-4 shadow-sm">
+                        <h3 class="text-xl font-black text-slate-900 cyber-font flex items-center gap-2">
+                            <i class="fa-solid fa-sliders text-ice-600"></i> 原生音訊播放控制器
+                        </h3>
+
+                        <!-- 音訊元素 -->
+                        <audio id="suno-audio" src="https://cdn1.suno.ai/3422e586-5c21-41d8-9a8d-c13f23472797.mp3" preload="metadata"></audio>
+
+                        <div class="flex items-center gap-4">
+                            <button id="btn-play-music" class="w-14 h-14 bg-cyber-pink hover:bg-rose-700 text-white rounded-full flex items-center justify-center text-xl transition-all shadow-md">
+                                <i class="fa-solid fa-play ml-1"></i>
+                            </button>
+                            <div class="flex-1">
+                                <div class="flex justify-between text-xs font-mono text-slate-500 mb-1 font-bold">
+                                    <span id="music-time-cur">0:00</span>
+                                    <span id="music-time-dur">0:00</span>
+                                </div>
+                                <input type="range" id="music-seek" value="0" max="100" class="w-full accent-cyber-pink cursor-pointer">
+                            </div>
+                        </div>
+
+                        <!-- 音量控條 -->
+                        <div class="flex items-center gap-3 text-xs text-slate-600 font-mono pt-2 border-t border-slate-200">
+                            <i class="fa-solid fa-volume-high text-ice-600"></i>
+                            <span class="font-bold">音量:</span>
+                            <input type="range" id="music-vol" value="80" max="100" class="w-32 accent-ice-500 cursor-pointer">
+                            <a href="https://suno.com/s/PQ1OgONTwSZhIyor" target="_blank" class="ml-auto px-3 py-1.5 bg-cyber-pink text-white hover:bg-rose-700 transition-all rounded-lg text-xs font-bold shadow-sm">
+                                🔗 歌曲連結: PQ1OgONTwSZhIyor
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- 曲風資訊 -->
+                    <div class="bg-white p-5 border border-ice-200 rounded-2xl font-mono text-xs space-y-1 shadow-sm">
+                        <div class="text-cyber-yellow font-bold mb-1">STYLE PROMPT / 曲風標籤</div>
+                        <p class="text-slate-700 font-medium">Cyberpunk, Drum and Bass, Cyber-Industrial Beats, 128 BPM, Heavy Cyber Bassline, Fast Paced FPS Soundscapes</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. 專案簡報與架構區 (Presentation Deck Summary) -->
+    <section id="deck-section" class="py-20 px-4 max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-ice-100 border border-ice-300 text-ice-600 font-mono text-xs font-bold mb-3">
+                <i class="fa-solid fa-file-powerpoint"></i> PROJECT PITCH DECK
+            </div>
+            <h2 class="text-3xl sm:text-5xl font-black cyber-font text-slate-900 mb-3">
+                專案簡報與技術架構
+            </h2>
+            <p class="text-slate-600 max-w-xl mx-auto text-sm font-medium">
+                《CYBER-AIM 3D 遊戲簡報》10 頁核心架構精華展示，涵蓋渲染技術、Web Audio 聲學與電競訓練優勢。
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="card-glass p-6 rounded-2xl shadow-sm border-l-4 border-l-ice-500">
+                <div class="text-xs font-mono font-bold text-ice-600 mb-1">SLIDE 01 & 02</div>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">產品定位與效能指標</h3>
+                <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                    專為 FPS 玩家打造的高質感槍法訓練場，具備 60 FPS 零安裝極速響應與全繁體中文電競戰術 HUD。
+                </p>
+                <div class="inline-block px-2.5 py-1 bg-ice-100 text-ice-600 font-mono text-xs rounded font-bold">60 FPS WebGL</div>
+            </div>
+
+            <div class="card-glass p-6 rounded-2xl shadow-sm border-l-4 border-l-cyber-pink">
+                <div class="text-xs font-mono font-bold text-cyber-pink mb-1">SLIDE 04 & 05</div>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">核心技術與三大身法技能</h3>
+                <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                    整合 Three.js 渲染、Web Audio 聲效、Pointer Lock 視角與 Q 飛鉤、E 時空減速、Z 電漿身法。
+                </p>
+                <div class="inline-block px-2.5 py-1 bg-rose-100 text-cyber-pink font-mono text-xs rounded font-bold">Q/E/Z 賽博技能</div>
+            </div>
+
+            <div class="card-glass p-6 rounded-2xl shadow-sm border-l-4 border-l-cyber-yellow">
+                <div class="text-xs font-mono font-bold text-cyber-yellow mb-1">SLIDE 06 & 09</div>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">部位 Hitbox 與代碼 67 面板</h3>
+                <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                    支援頭部 (3.0x)、軀幹與腿部傷害分區判定，並包含可除錯的「代碼 67」Aimbot 與 ESP 控制台。
+                </p>
+                <div class="inline-block px-2.5 py-1 bg-amber-100 text-cyber-yellow font-mono text-xs rounded font-bold">3.0x 爆頭判定</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. 開發演進歷程 (Evolution Timeline) -->
+    <section id="timeline-section" class="py-20 px-4 bg-slate-900 text-white">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-ice-500/20 border border-ice-400 text-ice-400 font-mono text-xs font-bold mb-3">
+                    <i class="fa-solid fa-timeline"></i> DEVELOPMENT TIMELINE
+                </div>
+                <h2 class="text-3xl sm:text-5xl font-black cyber-font mb-4">
+                    《CYBER-AIM 3D》完整開發歷程
+                </h2>
+                <p class="text-slate-400 max-w-xl mx-auto text-sm">
+                    見證從最初的 Three.js 3D 靶場原型，演進至整合 SUNO 音樂與代碼 67 的完整平台。
+                </p>
+            </div>
+
+            <div class="relative border-l-2 border-ice-500/40 ml-4 md:ml-32 space-y-10">
+                <!-- Step 1 -->
+                <div class="relative pl-8 md:pl-12">
+                    <div class="absolute -left-[17px] top-1.5 w-8 h-8 bg-slate-900 border-2 border-ice-400 rounded-full flex items-center justify-center text-ice-400 font-bold text-xs shadow-md">v1</div>
+                    <div class="hidden md:block absolute -left-32 top-2 text-xs font-mono text-ice-400 font-bold">2025.Q1</div>
+                    <div class="card-glass-dark p-6 rounded-2xl">
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="px-2.5 py-0.5 bg-ice-500/20 text-ice-400 text-xs font-mono font-bold rounded">v1.0 原型</span>
+                            <h3 class="text-xl font-bold text-white">Three.js 核心 3D 舞台驗證</h3>
+                        </div>
+                        <p class="text-slate-300 text-sm leading-relaxed mb-3">
+                            建立 FPS 第一人稱視角鏡頭控制與 Three.js 鏡面舞台，實現平滑滑鼠轉向與基礎標靶打擊。
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="relative pl-8 md:pl-12">
+                    <div class="absolute -left-[17px] top-1.5 w-8 h-8 bg-slate-900 border-2 border-cyber-pink rounded-full flex items-center justify-center text-cyber-pink font-bold text-xs shadow-md">v2</div>
+                    <div class="hidden md:block absolute -left-32 top-2 text-xs font-mono text-cyber-pink font-bold">2025.Q2</div>
+                    <div class="card-glass-dark p-6 rounded-2xl">
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="px-2.5 py-0.5 bg-cyber-pink/20 text-cyber-pink text-xs font-mono font-bold rounded">v2.0 身法</span>
+                            <h3 class="text-xl font-bold text-white">賽博身法 (Q/E/Z) 與 Web Audio 聲學</h3>
+                        </div>
+                        <p class="text-slate-300 text-sm leading-relaxed mb-3">
+                            引進飛鉤抓繩 (Q)、Matrix 時空減速 (E) 及電漿爆裂 (Z)，並整合原生 Web Audio 即時合成槍效。
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="relative pl-8 md:pl-12">
+                    <div class="absolute -left-[17px] top-1.5 w-8 h-8 bg-slate-900 border-2 border-cyber-yellow rounded-full flex items-center justify-center text-cyber-yellow font-bold text-xs shadow-md">v3</div>
+                    <div class="hidden md:block absolute -left-32 top-2 text-xs font-mono text-cyber-yellow font-bold">2025.Q3</div>
+                    <div class="card-glass-dark p-6 rounded-2xl">
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="px-2.5 py-0.5 bg-cyber-yellow/20 text-cyber-yellow text-xs font-mono font-bold rounded">v3.0 動態 AI</span>
+                            <h3 class="text-xl font-bold text-white">動態走位 AI 機器人與 Hitbox 判定</h3>
+                        </div>
+                        <p class="text-slate-300 text-sm leading-relaxed mb-3">
+                            加入具備 AD 走位與跳躍的 AI Bot；新增頭部 (3.0x)、軀幹 (1.0x)、腿部 (0.7x) 傷害與 2.5x 狙擊鏡。
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="relative pl-8 md:pl-12">
+                    <div class="absolute -left-[17px] top-1.5 w-8 h-8 bg-slate-900 border-2 border-purple-400 rounded-full flex items-center justify-center text-purple-400 font-bold text-xs shadow-md">v4</div>
+                    <div class="hidden md:block absolute -left-32 top-2 text-xs font-mono text-purple-400 font-bold">2026.Q1</div>
+                    <div class="card-glass-dark p-6 rounded-2xl border-purple-500/40">
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="px-2.5 py-0.5 bg-purple-500/20 text-purple-300 text-xs font-mono font-bold rounded">v4.0 旗艦完全版</span>
+                            <h3 class="text-xl font-bold text-white">繁中 UI、SUNO 主題曲與「代碼 67」神級 Console</h3>
+                        </div>
+                        <p class="text-slate-300 text-sm leading-relaxed mb-3">
+                            重構全繁體中文介面，內嵌 SUNO AI 官方主題曲《VEKC OVERDRIVE》，並推出「代碼 67」開發者神級面板。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 頁尾 Footer -->
+    <footer class="py-12 px-4 bg-white border-t border-ice-200 text-slate-600 text-xs font-mono">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-ice-500 text-white font-black rounded-lg flex items-center justify-center font-orbitron">V</div>
+                <div>
+                    <span class="text-slate-900 font-bold text-sm cyber-font">CYBER-AIM 3D: VEKC OVERDRIVE</span>
+                    <p class="text-[10px] text-slate-500">© 2026 OFFICIAL ONE-PAGE PLATFORM. ALL RIGHTS RESERVED.</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-6 font-bold">
+                <a href="#hero" class="hover:text-ice-600 transition-colors">回到頂部</a>
+                <a href="https://suno.com/s/PQ1OgONTwSZhIyor" target="_blank" class="hover:text-cyber-pink transition-colors">SUNO 主題曲</a>
+                <button onclick="openDevModal()" class="text-cyber-pink hover:underline">🔑 代碼 67 驗證</button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 「代碼 67」開發者控制台 Modal -->
+    <div id="dev-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="bg-white border-2 border-cyber-pink rounded-2xl max-w-md w-full p-6 relative shadow-2xl">
+            <button onclick="closeDevModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-800 text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 bg-rose-100 border border-cyber-pink text-cyber-pink rounded-full flex items-center justify-center mx-auto mb-2 text-xl">
+                    <i class="fa-solid fa-terminal"></i>
+                </div>
+                <h3 class="text-2xl font-black text-slate-900 cyber-font">開發者代碼驗證</h3>
+                <p class="text-xs text-slate-500 mt-1">請輸入核心驗證碼解鎖神級主控台功能</p>
+            </div>
+
+            <!-- 輸入區域 -->
+            <div id="dev-input-sec" class="space-y-4">
+                <input type="text" id="dev-code-input" placeholder="輸入代碼 (預設: 67)" class="w-full bg-slate-50 border border-cyber-pink px-4 py-3 text-center text-slate-900 font-mono text-lg rounded-xl outline-none focus:ring-2 focus:ring-cyber-pink">
+                <button onclick="verifyDevCode()" class="w-full py-3 bg-cyber-pink text-white font-bold text-sm rounded-xl hover:bg-rose-700 transition-all shadow-md">
+                    確認認證代碼 67
+                </button>
+                <div id="dev-error-msg" class="text-red-500 text-xs text-center hidden font-bold">❌ 代碼無效！請輸入「67」</div>
+            </div>
+
+            <!-- 解鎖後控制台 -->
+            <div id="dev-panel-sec" class="hidden space-y-4 font-mono">
+                <div class="p-2.5 bg-emerald-100 border border-emerald-300 text-emerald-800 text-xs text-center rounded-xl font-bold">
+                    ✓ 代碼 67 驗證成功！開發者神級面板已啟用
+                </div>
+
+                <div class="space-y-2 text-xs font-bold text-slate-800">
+                    <label class="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-200 cursor-pointer hover:border-ice-500">
+                        <span><i class="fa-solid fa-bullseye text-ice-500 mr-2"></i> Aimbot 自動鎖頭</span>
+                        <input type="checkbox" id="toggle-aimbot" onchange="toggleDevFeature('aimbot')" class="accent-ice-500 w-4 h-4">
+                    </label>
+
+                    <label class="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-200 cursor-pointer hover:border-cyber-pink">
+                        <span><i class="fa-solid fa-eye text-cyber-pink mr-2"></i> ESP / Wallhack 全圖透視</span>
+                        <input type="checkbox" id="toggle-esp" onchange="toggleDevFeature('esp')" class="accent-cyber-pink w-4 h-4">
+                    </label>
+
+                    <label class="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-200 cursor-pointer hover:border-cyber-yellow">
+                        <span><i class="fa-solid fa-shield text-cyber-yellow mr-2"></i> God Mode 鎖血無敵</span>
+                        <input type="checkbox" id="toggle-god" onchange="toggleDevFeature('god')" class="accent-cyber-yellow w-4 h-4">
+                    </label>
+
+                    <label class="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-200 cursor-pointer hover:border-purple-600">
+                        <span><i class="fa-solid fa-bolt text-purple-600 mr-2"></i> 狂暴連發 (無彈藥消耗)</span>
+                        <input type="checkbox" id="toggle-rapid" onchange="toggleDevFeature('rapid')" class="accent-purple-600 w-4 h-4">
+                    </label>
+                </div>
+
+                <button onclick="closeDevModal()" class="w-full py-2.5 bg-slate-900 text-white text-xs rounded-xl font-bold hover:bg-slate-800 transition-all">
+                    套用並返回戰場
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // 選單與代碼 67 控制
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+            menu.classList.toggle('flex');
+        }
+
+        function openDevModal() {
+            document.getElementById('dev-modal').classList.remove('hidden');
+        }
+        function closeDevModal() {
+            document.getElementById('dev-modal').classList.add('hidden');
+        }
+
+        // 按波浪符 `~` 調出 Modal
+        window.addEventListener('keydown', (e) => {
+            if (e.key === '`' || e.key === '~') openDevModal();
+        });
+
+        function verifyDevCode() {
+            const val = document.getElementById('dev-code-input').value.trim();
+            if (val === '67') {
+                document.getElementById('dev-input-sec').classList.add('hidden');
+                document.getElementById('dev-panel-sec').classList.remove('hidden');
+                document.getElementById('dev-error-msg').classList.add('hidden');
+            } else {
+                document.getElementById('dev-error-msg').classList.remove('hidden');
+            }
+        }
+
+        // SUNO 原生播放器邏輯
+        const audio = document.getElementById('suno-audio');
+        const btnPlayMusic = document.getElementById('btn-play-music');
+        const musicSeek = document.getElementById('music-seek');
+        const musicVol = document.getElementById('music-vol');
+        const timeCur = document.getElementById('music-time-cur');
+        const timeDur = document.getElementById('music-time-dur');
+
+        btnPlayMusic.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play();
+                btnPlayMusic.innerHTML = '<i class="fa-solid fa-pause"></i>';
+            } else {
+                audio.pause();
+                btnPlayMusic.innerHTML = '<i class="fa-solid fa-play ml-1"></i>';
+            }
+        });
+
+        audio.addEventListener('loadedmetadata', () => {
+            timeDur.textContent = formatTime(audio.duration);
+        });
+
+        audio.addEventListener('timeupdate', () => {
+            if (!isNaN(audio.duration)) {
+                musicSeek.value = (audio.currentTime / audio.duration) * 100;
+                timeCur.textContent = formatTime(audio.currentTime);
+            }
+        });
+
+        musicSeek.addEventListener('input', () => {
+            if (!isNaN(audio.duration)) {
+                audio.currentTime = (musicSeek.value / 100) * audio.duration;
+            }
+        });
+
+        musicVol.addEventListener('input', () => {
+            audio.volume = musicVol.value / 100;
+        });
+
+        function formatTime(sec) {
+            const m = Math.floor(sec / 60);
+            const s = Math.floor(sec % 60);
+            return `${m}:${s < 10 ? '0' : ''}${s}`;
+        }
+
+        // Web Audio API 合成器
+        class CyberSoundSynth {
+            constructor() { this.ctx = null; }
+            init() {
+                if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            playGunshot(freq = 600, duration = 0.15) {
+                if (!this.ctx) return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(40, this.ctx.currentTime + duration);
+                gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + duration);
+                osc.connect(gain); gain.connect(this.ctx.destination);
+                osc.start(); osc.stop(this.ctx.currentTime + duration);
+            }
+            playHit() {
+                if (!this.ctx) return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(800, this.ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(200, this.ctx.currentTime + 0.08);
+                gain.gain.setValueAtTime(0.4, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.08);
+                osc.connect(gain); gain.connect(this.ctx.destination);
+                osc.start(); osc.stop(this.ctx.currentTime + 0.08);
+            }
+            playGrapple() {
+                if (!this.ctx) return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(300, this.ctx.currentTime);
+                osc.frequency.linearRampToValueAtTime(1200, this.ctx.currentTime + 0.3);
+                gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.3);
+                osc.connect(gain); gain.connect(this.ctx.destination);
+                osc.start(); osc.stop(this.ctx.currentTime + 0.3);
+            }
+        }
+        const soundSynth = new CyberSoundSynth();
+
+        // Three.js 3D 遊戲引擎
+        let scene, camera, renderer;
+        let isLocked = false;
+        let moveForward = false, moveBackward = false, moveLeft = false, moveRight = false;
+        let canJump = true, isSliding = false;
+        let velocity = new THREE.Vector3();
+        let direction = new THREE.Vector3();
+        let prevTime = performance.now();
+
+        const gameState = {
+            hp: 100, maxHp: 100, score: 0, totalShots: 0, headshots: 0, weaponIdx: 0,
+            weapons: [
+                { name: 'AK-CYBER', maxAmmo: 30, curAmmo: 30, damage: 35, fireRate: 110, freq: 500 },
+                { name: 'AWP-PRO', maxAmmo: 5, curAmmo: 5, damage: 120, fireRate: 800, freq: 200 },
+                { name: 'VECTOR-NEON', maxAmmo: 40, curAmmo: 40, damage: 18, fireRate: 60, freq: 800 },
+                { name: 'PUMP SHOTGUN', maxAmmo: 8, curAmmo: 8, damage: 15, fireRate: 600, freq: 300 }
+            ],
+            cdQ: 0, cdE: 0, cdZ: 0, isBulletTime: false,
+            dev: { aimbot: false, esp: false, god: false, rapid: false }
+        };
+
+        const bots = [];
+        const canvas = document.getElementById('game-canvas');
+
+        function init3DGame() {
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0f172a);
+            scene.fog = new THREE.FogExp2(0x0f172a, 0.012);
+
+            camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+            camera.position.set(0, 1.7, 0);
+
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+            renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+            scene.add(ambientLight);
+
+            const dirLight = new THREE.DirectionalLight(0x0284c7, 1.2);
+            dirLight.position.set(20, 40, 20);
+            scene.add(dirLight);
+
+            // 清爽白金幾何網格地板
+            const floorGeo = new THREE.PlaneGeometry(120, 120);
+            const floorMat = new THREE.MeshStandardMaterial({ color: 0xf1f5f9, roughness: 0.2, metalness: 0.1 });
+            const floor = new THREE.Mesh(floorGeo, floorMat);
+            floor.rotation.x = -Math.PI / 2;
+            scene.add(floor);
+
+            const gridHelper = new THREE.GridHelper(120, 40, 0x0284c7, 0x94a3b8);
+            gridHelper.position.y = 0.01;
+            scene.add(gridHelper);
+
+            // 掩體柱
+            for(let i=0; i<12; i++) {
+                const boxGeo = new THREE.BoxGeometry(3, 6, 3);
+                const boxMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, emissive: 0x0284c7, emissiveIntensity: 0.15 });
+                const box = new THREE.Mesh(boxGeo, boxMat);
+                box.position.set((Math.random() - 0.5) * 80, 3, (Math.random() - 0.5) * 80);
+                scene.add(box);
+            }
+
+            for(let i=0; i<5; i++) spawnBot();
+            setupControls();
+            animate();
+        }
+
+        function spawnBot() {
+            const group = new THREE.Group();
+
+            const headGeo = new THREE.SphereGeometry(0.35, 16, 16);
+            const headMat = new THREE.MeshBasicMaterial({ color: 0xe11d48 });
+            const head = new THREE.Mesh(headGeo, headMat);
+            head.position.y = 1.6;
+            head.userData = { type: 'head' };
+            group.add(head);
+
+            const bodyGeo = new THREE.CylinderGeometry(0.4, 0.3, 1.0, 16);
+            const bodyMat = new THREE.MeshStandardMaterial({ color: 0x0284c7, roughness: 0.3 });
+            const body = new THREE.Mesh(bodyGeo, bodyMat);
+            body.position.y = 0.9;
+            body.userData = { type: 'torso' };
+            group.add(body);
+
+            group.position.set((Math.random() - 0.5) * 60, 0, -10 - Math.random() * 40);
+            group.userData = { hp: 100, dirX: Math.random() > 0.5 ? 1 : -1, speed: 3 + Math.random() * 3 };
+
+            scene.add(group);
+            bots.push(group);
+        }
+
+        function setupControls() {
+            const btnStart = document.getElementById('btn-start-game');
+            const overlay = document.getElementById('start-overlay');
+
+            btnStart.addEventListener('click', () => {
+                canvas.requestPointerLock();
+                soundSynth.init();
+            });
+
+            document.addEventListener('pointerlockchange', () => {
+                if (document.pointerLockElement === canvas) {
+                    isLocked = true;
+                    overlay.classList.add('hidden');
+                } else {
+                    isLocked = false;
+                    overlay.classList.remove('hidden');
+                }
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isLocked) return;
+                const sensitivity = 0.002;
+                camera.rotation.y -= e.movementX * sensitivity;
+                camera.rotation.x -= e.movementY * sensitivity;
+                camera.rotation.x = Math.max(-Math.PI/2.2, Math.min(Math.PI/2.2, camera.rotation.x));
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (!isLocked) return;
+                switch (e.code) {
+                    case 'KeyW': moveForward = true; break;
+                    case 'KeyS': moveBackward = true; break;
+                    case 'KeyA': moveLeft = true; break;
+                    case 'KeyD': moveRight = true; break;
+                    case 'Space': if (canJump) { velocity.y += 12; canJump = false; } break;
+                    case 'ShiftLeft': if (!isSliding) { isSliding = true; camera.position.y = 1.0; } break;
+                    case 'Digit1': switchWeapon(0); break;
+                    case 'Digit2': switchWeapon(1); break;
+                    case 'Digit3': switchWeapon(2); break;
+                    case 'Digit4': switchWeapon(3); break;
+                    case 'KeyQ': castQ(); break;
+                    case 'KeyE': castE(); break;
+                    case 'KeyZ': castZ(); break;
+                }
+            });
+
+            document.addEventListener('keyup', (e) => {
+                switch (e.code) {
+                    case 'KeyW': moveForward = false; break;
+                    case 'KeyS': moveBackward = false; break;
+                    case 'KeyA': moveLeft = false; break;
+                    case 'KeyD': moveRight = false; break;
+                    case 'ShiftLeft': isSliding = false; camera.position.y = 1.7; break;
+                }
+            });
+
+            document.addEventListener('mousedown', (e) => {
+                if (!isLocked) return;
+                if (e.button === 0) shootWeapon();
+                else if (e.button === 2) {
+                    e.preventDefault();
+                    if (gameState.weaponIdx === 1) {
+                        const scope = document.getElementById('scope-overlay');
+                        if (scope.style.display === 'flex') {
+                            scope.style.display = 'none';
+                            camera.fov = 75;
+                        } else {
+                            scope.style.display = 'flex';
+                            camera.fov = 30;
+                        }
+                        camera.updateProjectionMatrix();
+                    }
+                }
+            });
+
+            canvas.addEventListener('contextmenu', e => e.preventDefault());
+        }
+
+        function switchWeapon(idx) {
+            gameState.weaponIdx = idx;
+            const w = gameState.weapons[idx];
+            document.getElementById('hud-weapon-name').textContent = w.name;
+            document.getElementById('hud-ammo-cur').textContent = w.curAmmo;
+            document.getElementById('hud-ammo-max').textContent = w.maxAmmo;
+            document.getElementById('scope-overlay').style.display = 'none';
+            camera.fov = 75;
+            camera.updateProjectionMatrix();
+        }
+
+        let lastShootTime = 0;
+        function shootWeapon() {
+            const now = performance.now();
+            const w = gameState.weapons[gameState.weaponIdx];
+
+            if (!gameState.dev.rapid && now - lastShootTime < w.fireRate) return;
+            if (w.curAmmo <= 0) w.curAmmo = w.maxAmmo;
+            if (!gameState.dev.rapid) w.curAmmo--;
+
+            lastShootTime = now;
+            gameState.totalShots++;
+            document.getElementById('hud-ammo-cur').textContent = w.curAmmo;
+
+            soundSynth.playGunshot(w.freq);
+
+            const raycaster = new THREE.Raycaster();
+            raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
+
+            if (gameState.dev.aimbot && bots.length > 0) {
+                const targetBot = bots[0];
+                const headPos = targetBot.position.clone().add(new THREE.Vector3(0, 1.6, 0));
+                raycaster.ray.direction.copy(headPos.sub(camera.position).normalize());
+            }
+
+            const intersects = raycaster.intersectObjects(bots.map(b => b.children).flat());
+
+            if (intersects.length > 0) {
+                const hitObj = intersects[0].object;
+                const botGroup = hitObj.parent;
+                const type = hitObj.userData.type || 'torso';
+
+                let mult = 1.0;
+                if (type === 'head') {
+                    mult = 3.0;
+                    gameState.headshots++;
+                }
+
+                botGroup.userData.hp -= w.damage * mult;
+                showHitmarker();
+                soundSynth.playHit();
+
+                if (botGroup.userData.hp <= 0) {
+                    scene.remove(botGroup);
+                    const idx = bots.indexOf(botGroup);
+                    if (idx > -1) bots.splice(idx, 1);
+                    gameState.score++;
+                    document.getElementById('hud-score').textContent = gameState.score;
+                    addKillFeed(`淘汰 賽博標靶 AI [${type.toUpperCase()}]`);
+                    spawnBot();
+                }
+            }
+
+            const hsPct = Math.round((gameState.headshots / Math.max(1, gameState.totalShots)) * 100);
+            document.getElementById('hud-hs-percent').textContent = `${hsPct}%`;
+        }
+
+        function showHitmarker() {
+            const hm = document.getElementById('hitmarker');
+            hm.style.opacity = '1';
+            setTimeout(() => { hm.style.opacity = '0'; }, 100);
+        }
+
+        function addKillFeed(msg) {
+            const feed = document.getElementById('kill-feed');
+            const div = document.createElement('div');
+            div.className = 'px-3 py-1 bg-cyber-pink text-white font-mono text-xs rounded shadow';
+            div.textContent = msg;
+            feed.appendChild(div);
+            setTimeout(() => div.remove(), 3000);
+        }
+
+        function castQ() {
+            if (gameState.cdQ > 0) return;
+            soundSynth.playGrapple();
+            velocity.y += 15;
+            velocity.z -= 20;
+            gameState.cdQ = 5;
+            document.getElementById('cd-q').textContent = '5s';
+        }
+
+        function castE() {
+            if (gameState.cdE > 0) return;
+            gameState.isBulletTime = true;
+            gameState.cdE = 10;
+            document.getElementById('cd-e').textContent = '10s';
+            scene.fog.color.setHex(0x9333ea);
+            setTimeout(() => {
+                gameState.isBulletTime = false;
+                scene.fog.color.setHex(0x0f172a);
+            }, 4000);
+        }
+
+        function castZ() {
+            if (gameState.cdZ > 0) return;
+            soundSynth.playGunshot(100, 0.4);
+            bots.forEach(bot => {
+                bot.userData.hp -= 80;
+                if (bot.userData.hp <= 0) {
+                    scene.remove(bot);
+                    spawnBot();
+                    gameState.score++;
+                }
+            });
+            document.getElementById('hud-score').textContent = gameState.score;
+            addKillFeed('⚡ 電漿爆裂 清理全場標靶');
+            gameState.cdZ = 8;
+            document.getElementById('cd-z').textContent = '8s';
+        }
+
+        function toggleDevFeature(feature) {
+            const chk = document.getElementById(`toggle-${feature}`).checked;
+            gameState.dev[feature] = chk;
+            if (feature === 'god' && chk) {
+                gameState.hp = 9999;
+                document.getElementById('hud-hp-val').textContent = '9999 / 9999';
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const time = performance.now();
+            const delta = (time - prevTime) / 1000;
+            prevTime = time;
+
+            if (isLocked) {
+                velocity.x -= velocity.x * 10.0 * delta;
+                velocity.z -= velocity.z * 10.0 * delta;
+                velocity.y -= 9.8 * 3.0 * delta;
+
+                direction.z = Number(moveForward) - Number(moveBackward);
+                direction.x = Number(moveRight) - Number(moveLeft);
+                direction.normalize();
+
+                const moveSpeed = isSliding ? 80.0 : 40.0;
+                if (moveForward || moveBackward) velocity.z -= direction.z * moveSpeed * delta;
+                if (moveLeft || moveRight) velocity.x -= direction.x * moveSpeed * delta;
+
+                camera.translateX(-velocity.x * delta);
+                camera.translateZ(velocity.z * delta);
+                camera.position.y += velocity.y * delta;
+
+                if (camera.position.y < (isSliding ? 1.0 : 1.7)) {
+                    velocity.y = 0;
+                    camera.position.y = isSliding ? 1.0 : 1.7;
+                    canJump = true;
+                }
+
+                const botSpeedMult = gameState.isBulletTime ? 0.2 : 1.0;
+                bots.forEach(bot => {
+                    bot.position.x += bot.userData.dirX * bot.userData.speed * botSpeedMult * delta;
+                    if (Math.abs(bot.position.x) > 35) bot.userData.dirX *= -1;
+                });
+
+                const radarDots = document.getElementById('radar-dots');
+                radarDots.innerHTML = '';
+                bots.forEach(bot => {
+                    const dx = (bot.position.x - camera.position.x) * 1.2;
+                    const dz = (bot.position.z - camera.position.z) * 1.2;
+                    const dot = document.createElement('div');
+                    dot.className = 'w-1.5 h-1.5 bg-cyber-pink rounded-full absolute -translate-x-1/2 -translate-y-1/2';
+                    dot.style.left = `${50 + dx}%`;
+                    dot.style.top = `${50 + dz}%`;
+                    radarDots.appendChild(dot);
+                });
+
+                ['Q', 'E', 'Z'].forEach(k => {
+                    const prop = `cd${k}`;
+                    if (gameState[prop] > 0) {
+                        gameState[prop] = Math.max(0, gameState[prop] - delta);
+                        document.getElementById(`cd-${k.toLowerCase()}`).textContent = gameState[prop] > 0 ? `${Math.ceil(gameState[prop])}s` : '就緒';
+                    }
+                });
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            if (!camera || !renderer) return;
+            camera.aspect = canvas.clientWidth / canvas.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+        });
+
+        window.onload = () => {
+            init3DGame();
+        };
+    </script>
+</body>
+</html>
